@@ -6,6 +6,14 @@ import "./App.css";
 const App = () => {
   const [searchedText, setSearchedText] = useState(""); // [value, setValueFunction]
   const [monsters, setMonsters] = useState([]);
+  const [filteredMonsters, setFilteredMonsters] = useState(monsters);
+
+  useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLowerCase().includes(searchedText);
+    });
+    setFilteredMonsters(newFilteredMonsters);
+  }, [monsters, searchedText]);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -18,9 +26,6 @@ const App = () => {
     setSearchedText(searchFieldString);
   };
 
-  const filterMonsters = monsters.filter((monster) => {
-    return monster.name.toLowerCase().includes(searchedText);
-  });
   return (
     <div className="App">
       <h1 className="app-title">Monsters Rolodex</h1>
@@ -29,7 +34,7 @@ const App = () => {
         placeholder="Search Monsters"
         className="monsters-search-box"
       />
-      <CardList monsters={filterMonsters} />
+      <CardList monsters={filteredMonsters} />
     </div>
   );
 };
